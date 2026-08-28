@@ -1,3 +1,4 @@
+using System;
 using Core.Input;
 using UnityEngine;
 
@@ -7,7 +8,9 @@ namespace Gameplay.Player
     {
         [Header("References")]
         [SerializeField] private JoystickController joystick;
-        [SerializeField] private GameObject carModel;
+        //[SerializeField] private GameObject carModel;
+        [SerializeField] private GameObject player;
+        [SerializeField] private float speed = 5f;
 
         [Header("Movement Settings")]
         [SerializeField] private float moveSpeed;
@@ -45,6 +48,13 @@ namespace Gameplay.Player
             var currentRotation = transform.localEulerAngles.y;
             var smoothedRotation = ApplyRotation(currentRotation, targetRotation);
             transform.localRotation = Quaternion.Euler(0, smoothedRotation, 0);
+        }
+
+        private void FixedUpdate()
+        {
+            player.SetActive(true);
+            Vector3 moveDirection = Vector3.forward;
+            player.transform.Translate(moveDirection * (speed * Time.deltaTime), Space.World);
         }
 
         /// <summary>
