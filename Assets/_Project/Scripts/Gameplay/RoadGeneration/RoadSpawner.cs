@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using Gameplay.Traffic;
 
 namespace Gameplay.RoadGeneration
 {
@@ -85,9 +86,14 @@ namespace Gameplay.RoadGeneration
                 Chunk chunkInfo = chunk.AddComponent<Chunk>();
                 chunkInfo.OriginalPrefab = prefab;
             }
-            _activeChunks.Enqueue(chunk);
             chunk.transform.position = new Vector3(0, 0, _spawnZ);
             _spawnZ += chunkLength;
+            ObstacleSpawner obstacleSpawner = chunk.GetComponent<ObstacleSpawner>();
+            if (obstacleSpawner)
+            {
+                obstacleSpawner.SpawnContent();
+            }
+            _activeChunks.Enqueue(chunk);
         }
 
         /// <summary>

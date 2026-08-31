@@ -50,7 +50,7 @@ namespace Gameplay.Player
             transform.localRotation = Quaternion.Euler(0, smoothedRotation, 0);
         }
 
-        private void FixedUpdate()
+        private void LateUpdate()
         {
             player.SetActive(true);
             Vector3 moveDirection = Vector3.forward;
