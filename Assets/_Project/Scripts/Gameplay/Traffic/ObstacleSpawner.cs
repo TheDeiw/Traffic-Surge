@@ -37,10 +37,11 @@ namespace Gameplay.Traffic
             GameObject carObj = TrafficManager.Instance.GetRandomFreeCar();
             if (carObj == null) return;
 
-            if (!carObj.TryGetComponent<TrafficCar>(out TrafficCar carScript))
-            {
-                carScript = carObj.AddComponent<TrafficCar>();
-            }
+            // if (!carObj.TryGetComponent<TrafficCar>(out TrafficCar carScript))
+            // {
+            //     carScript = carObj.AddComponent<TrafficCar>();
+            // }
+            TrafficCar carScript = carObj.GetComponent<TrafficCar>();
 
             bool isOncoming = index < (lanePoints.Length / 2);
 
@@ -59,6 +60,7 @@ namespace Gameplay.Traffic
             {
                 behavior = CarBehavior.Standard;
             }
+
             carScript.Init(spawnPosition, isOncoming, speed, behavior);
         }
     }

@@ -34,6 +34,7 @@ namespace Gameplay.Traffic
             _behavior = carBehavior;
             _currentSpeed = _maxSpeed;
             _isChangingLane = false;
+            brakeLights.SetActive(false);
 
             if (isOncoming)
             {
@@ -61,17 +62,17 @@ namespace Gameplay.Traffic
             _raycastTimer = RaycastInterval;
 
            Vector3 rayOrigin = transform.position + Vector3.up * 0.5f;
-           if (Physics.Raycast(rayOrigin, transform.forward, out RaycastHit hit, 5f, obstacleLayer))
+           if (Physics.Raycast(rayOrigin, transform.forward, out RaycastHit hit, 10f, obstacleLayer))
            {
                // Obstacle detected
-               //brakeLights.SetActive(true);
-               _currentSpeed = Mathf.Lerp(_maxSpeed, 0, Time.deltaTime * 0.5f);
+               brakeLights.SetActive(true);
+               _currentSpeed = Mathf.Lerp(_currentSpeed, 0, Time.deltaTime * 10f);
            }
            else
            {
                // No obstacle detected
-               //brakeLights.SetActive(false);
-               _currentSpeed = Mathf.Lerp(_currentSpeed, _maxSpeed, Time.deltaTime * 0.5f);
+               brakeLights.SetActive(false);
+               _currentSpeed = Mathf.Lerp(_currentSpeed, _maxSpeed, Time.deltaTime * 1f);
            }
 
         }
@@ -107,7 +108,7 @@ namespace Gameplay.Traffic
 
                 case CarBehavior.Parking:
                     _currentSpeed = Mathf.Lerp(_currentSpeed, 0, Time.deltaTime * 1f);
-                    //brakeLights.SetActive(true);
+                    brakeLights.SetActive(true);
 
                     if (_currentSpeed < 3f && _currentSpeed > 0.5f)
                     {
@@ -123,6 +124,9 @@ namespace Gameplay.Traffic
             {
                 float newX = Mathf.MoveTowards(transform.position.x, _targetLaneX, Time.deltaTime * 3f);
                 transform.position = new Vector3(newX, transform.position.y, transform.position.z);
+                //Rotate the car slightly towards the target lane for a more natural effect
+                float targetRotationY = _targetLaneX < transform.position.x ? 15f : -15f;
+                transform.Rotate(0, targetRotationY, 0, Space.Self);
             }
 
             Vector3 moveDirection = transform.forward;
